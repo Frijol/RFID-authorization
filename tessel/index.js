@@ -1,7 +1,7 @@
 var Keen = require('keen.io');
 
 // Configuration
-var config = require('./config.json');
+var config = require('../config.json');
 var pollPeriod = 500;
 var present = false;
 var countdown;
