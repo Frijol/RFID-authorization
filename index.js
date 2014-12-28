@@ -21,7 +21,10 @@ var keen = Keen.configure({
 
 // When RFID reader is ready to read cards
 rfid.on('ready', function () {
+  // Notify user
+  tessel.led[2].output(1);
   console.log('RFID reader ready and waiting.');
+  // Slow down data rate
   rfid.setPollPeriod(pollPeriod);
 });
 
@@ -29,16 +32,19 @@ rfid.on('ready', function () {
 rfid.on('data', function (data) {
   console.log(data.uid);
   clearTimeout(countdown);
+  // If it wasn't already there
   if (!present) {
     present = true;
     console.log('card present:', present);
-    sendData(data.uid, present);
+    // Log the data
+    sendData({uid: data.uid, present: present});
   }
   // Make sure card is still there
   countdown = setTimeout(function () {
+    // If it's not, log the change
     present = false;
     console.log('card present:', present);
-    sendData(data.uid, present);
+    sendData({uid: data.uid, present: present});
   }, pollPeriod + 500);
 });
 
