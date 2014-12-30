@@ -3,4 +3,11 @@ extends layout
 block content
   h1= message
   h2= error.status
-  pre #{error.stack}
+  if(error.status != 403)
+    pre #{error.stack}
+  else
+    p #{error}
+    p
+      a(href="/") Go home
+      |   |
+      a(href="/secret")  Try again

@@ -1,8 +1,8 @@
 var Keen = require('keen.io');
 
 // Configuration
-var config = require('../config.json');
-var pollPeriod = 500;
+var config = require('./config.json');
+var pollPeriod = 1000;
 var present = false;
 var countdown;
 var count = 0;
@@ -22,7 +22,7 @@ var keen = Keen.configure({
 // When RFID reader is ready to read cards
 rfid.on('ready', function () {
   // Notify user
-  tessel.led[2].output(1);
+  tessel.led[1].output(1);
   console.log('RFID reader ready and waiting.');
   // Slow down data rate
   rfid.setPollPeriod(pollPeriod);
