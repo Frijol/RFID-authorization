@@ -1,10 +1,10 @@
+console.log('Setting up, please wait...');
+
 var Keen = require('keen.io');
 
 // Configuration
 var config = require('./config.json');
 var pollPeriod = 1000;
-var present = false;
-var countdown;
 var count = 0;
 
 // Set up hardware
@@ -30,28 +30,15 @@ rfid.on('ready', function () {
 
 // When RFID card sensed
 rfid.on('data', function (data) {
-  console.log(data.uid);
-  clearTimeout(countdown);
-  // If it wasn't already there
-  if (!present) {
-    present = true;
-    console.log('card present:', present);
-    // Log the data
-    sendData({uid: data.uid, present: present});
-  }
-  // Make sure card is still there
-  countdown = setTimeout(function () {
-    // If it's not, log the change
-    present = false;
-    console.log('card present:', present);
-    sendData({uid: data.uid, present: present});
-  }, pollPeriod + 500);
+  // Log the data
+  sendData({uid: data.uid}, Date.now());
 });
 
 // Sending data to Keen
-function sendData (data) {
+function sendData (data, time) {
   keen.addEvent('rfid', {data: data}, function () {
     console.log("Added event #" + count, "data: ", data);
     count++;
+    console.log('Data send took '+ (Date.now() - time)/1000 + ' seconds to complete.');
   });
 }
